@@ -1,17 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
 
-export const Skeleton = ({ type, height, width, size }) => {
-  return (
-    <SkeletonItem className={type} height={height} width={width} size={size}>
+export const Skeleton = ({ type, height, width, size, line }) => {
+  return [...Array(line)].map((_, i) => (
+    <SkeletonItem
+      key={i}
+      className={type}
+      height={height}
+      width={width}
+      size={size}
+    >
       <HighLight />
     </SkeletonItem>
-  );
+  ));
 };
 
 const SkeletonItem = styled.div`
   width: ${({ width }) => (width ? width + 'px' : '100%')};
-  height: ${({ height }) => (height ? height + 'px' : '100%')};
+  height: ${({ height }) => (height ? height + 'px' : 'auto')};
   background: #e1e1e1;
   margin-bottom: 7px;
   border-radius: 3px;
@@ -21,7 +27,7 @@ const SkeletonItem = styled.div`
   cursor: pointer;
 
   &.title {
-    height: 22px;
+    height: 20px;
   }
 
   &.text {
@@ -41,7 +47,7 @@ const HighLight = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  animation: loading 2.5s infinite;
+  animation: loading 2s infinite;
 
   &::before {
     content: '';
