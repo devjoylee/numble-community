@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
 import { useQuery } from 'react-query';
 
 import { category } from 'api/queries/category';
+
 import { ReactComponent as MoreIcon } from 'assets/icons/arrow_b.svg';
 import { Icon, SkeletonCategory } from 'components/Common';
 import { svgs } from './svgs';

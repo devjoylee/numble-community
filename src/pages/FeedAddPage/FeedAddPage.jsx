@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 import { useMutation } from 'react-query';
-import { toast } from 'react-toastify';
+import { feed } from 'api/queries/feed';
+
+import { useSetRecoilState } from 'recoil';
+import { categoryState } from 'atoms/category';
+import { useCategory } from 'hooks/useCategory';
+
 import { PageHeader } from 'components/Common';
 import { FeedForm, CategoryModal } from 'components/FeedAdd';
-import { feed } from 'api/queries/feed';
+import { toast } from 'react-toastify';
 import * as S from './styles';
 
 export const FeedAddPage = () => {
   const [modal, setModal] = useState(true);
-  const [category, setCategory] = useState({ id: '', name: '' });
+  const setCategory = useSetRecoilState(categoryState);
+
+  const { state } = useLocation();
+  const category_name = useCategory(state.category_id);
+  const hasCategory = !isNaN(+state.category_id);
 
   const navigate = useNavigate();
   const toggleModal = () => setModal(prev => !prev);
@@ -26,19 +36,17 @@ export const FeedAddPage = () => {
     }
   });
 
+  useEffect(() => {
+    setCategory({ id: +state.category_id, name: category_name });
+  }, [state, category_name, setCategory]);
+
   return (
     <S.PageContainer>
       <PageHeader backTo="/" title={'게시글 작성'} />
 
-      {modal && (
-        <CategoryModal
-          toggleModal={toggleModal}
-          category={category}
-          setCategory={setCategory}
-        />
-      )}
+      {modal && !hasCategory && <CategoryModal toggleModal={toggleModal} />}
 
-      <FeedForm mutate={mutate} category={category} toggleModal={toggleModal} />
+      <FeedForm mutate={mutate} toggleModal={toggleModal} />
     </S.PageContainer>
   );
 };

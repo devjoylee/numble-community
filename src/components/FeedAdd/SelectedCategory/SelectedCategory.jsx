@@ -1,27 +1,15 @@
 import React from 'react';
+
+import { useRecoilValue } from 'recoil';
+import { categoryState } from 'atoms/category';
+
 import { Icon } from 'components/Common';
+import { svgs } from 'components/Common/Category/svgs';
 import { ReactComponent as Question } from 'assets/icons/question_mark.svg';
-import { ReactComponent as QuestionCircle } from 'assets/icons/category/question_circle.svg';
-import { ReactComponent as Clock } from 'assets/icons/category/clock.svg';
-import { ReactComponent as Bulb } from 'assets/icons/category/bulb.svg';
-import { ReactComponent as Map } from 'assets/icons/category/map.svg';
-import { ReactComponent as Puzzle } from 'assets/icons/category/puzzle.svg';
-import { ReactComponent as Lost } from 'assets/icons/category/lost.svg';
-import { ReactComponent as Lightning } from 'assets/icons/category/lightning.svg';
-import { ReactComponent as Fire } from 'assets/icons/category/fire.svg';
 import * as S from './styles';
 
-export const SelectedCategory = ({ toggleModal, category }) => {
-  const svgs = [
-    QuestionCircle,
-    Clock,
-    Bulb,
-    Map,
-    Puzzle,
-    Lost,
-    Lightning,
-    Fire
-  ];
+export const SelectedCategory = ({ toggleModal }) => {
+  const category = useRecoilValue(categoryState);
 
   return (
     <S.CategoryBox
