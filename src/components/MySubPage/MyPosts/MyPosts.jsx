@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
 import { ThumbTop } from 'components/Post';
@@ -10,6 +11,7 @@ export const MyPosts = ({ infiniteResponse }) => {
   const { data, isLoading, isFetching, fetchNextPage, refetch } =
     infiniteResponse;
 
+  const navigete = useNavigate();
   const isEmpty = !isLoading && !data.pages[0].feed_list.length;
 
   const { mutate: removeMutate } = useMutation(feed.remove, {
@@ -33,6 +35,13 @@ export const MyPosts = ({ infiniteResponse }) => {
           page.feed_list.map(post => (
             <ThumbTop key={post.feed_id} postData={post}>
               <EditDeleteButton
+                // handleEdit={() =>
+                //   navigete('/feed/add', {
+                //     state: {
+                //       post: post
+                //     }
+                //   })
+                // }
                 handleEdit={() => toast.warning('서비스 준비 중 입니다.')}
                 handleDelete={() => removeMutate(post.feed_id)}
               />

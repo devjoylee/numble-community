@@ -18,13 +18,15 @@ export const FeedAddPage = () => {
   const setCategory = useSetRecoilState(categoryState);
 
   const { state } = useLocation();
-  const category_name = useCategory(state.category_id);
-  const hasCategory = !isNaN(+state.category_id);
+  const category_id = state.category_id || state.post.category.category_id;
+  const category_name = useCategory(category_id);
+  const hasCategory = state && !isNaN(+category_id);
+  const isEdit = !!state.post;
 
   const navigate = useNavigate();
   const toggleModal = () => setModal(prev => !prev);
 
-  const { mutate } = useMutation(feed.add, {
+  const { mutate: addMutate } = useMutation(feed.add, {
     onSuccess: res => {
       console.log(res);
       toast.success('게시글 생성 성공 🎉');
@@ -36,17 +38,36 @@ export const FeedAddPage = () => {
     }
   });
 
+  const { mutate: editMutate } = useMutation(feed.edit, {
+    onSuccess: res => {
+      console.log(res);
+      toast.success('게시글 수정 완료 🎉');
+      navigate(`/feed/${state.post.feed_id}`);
+    },
+    onError: error => {
+      console.log(error.message);
+      toast.error('게시글 수정에 실패했습니다. 다시 시도해주세요.');
+    }
+  });
+
   useEffect(() => {
-    setCategory({ id: +state.category_id, name: category_name });
-  }, [state, category_name, setCategory]);
+    setCategory({
+      id: +category_id,
+      name: category_name
+    });
+  }, [category_id, category_name, setCategory]);
 
   return (
     <S.PageContainer>
-      <PageHeader backTo="/" title={'게시글 작성'} />
+      <PageHeader backTo="/" title={isEdit ? '게시글 수정' : '게시글 작성'} />
 
       {modal && !hasCategory && <CategoryModal toggleModal={toggleModal} />}
 
-      <FeedForm mutate={mutate} toggleModal={toggleModal} />
+      <FeedForm
+        mutate={isEdit ? editMutate : addMutate}
+        toggleModal={toggleModal}
+        postData={isEdit && state.post}
+      />
     </S.PageContainer>
   );
 };

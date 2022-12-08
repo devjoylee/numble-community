@@ -10,6 +10,14 @@ export const feed = {
     });
     return res.data;
   },
+  edit: async req => {
+    const res = await apiWithToken.patch(EP.FEED_ITEM, req, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+    return res.data;
+  },
   remove: async req => {
     const res = await apiWithToken.delete(EP.FEED_ITEM(req));
     return res;

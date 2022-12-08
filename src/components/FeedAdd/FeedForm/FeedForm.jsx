@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
+import { useRecoilValue } from 'recoil';
+import { categoryState } from 'atoms/category';
+
 import { ImgAddPreview, SelectedCategory } from 'components/FeedAdd';
 import { toast } from 'react-toastify';
 import * as S from './styles';
 
-export const FeedForm = ({ category, mutate, toggleModal }) => {
+export const FeedForm = ({ mutate, toggleModal, postData }) => {
   const [imgList, setImgList] = useState([]);
-  const [text, setText] = useState('');
+  const [text, setText] = useState(postData.content);
+
+  const category = useRecoilValue(categoryState);
 
   const handleSubmit = async e => {
     e.preventDefault();
